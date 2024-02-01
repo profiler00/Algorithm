@@ -1,21 +1,17 @@
 const filepath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 const input = require('fs').readFileSync(filepath).toString().trim().split('\n');
 
-const a = input[0];
-const b = parseInt(input[1]);
+const [str, question, O] = [input[0], +input[1], []]
+const l = str.length
+const A = Array(26).fill().map(_ => Array(l).fill(0))
 
-function sol(str, char, start, end) {
-  let cnt = 0;
-  for (let i = start; i <= end; i++) {
-    if (str[i] === char) {
-      cnt++;
-    }
-  }
-  return cnt;
+for (let i = 0; i < 26; i++)
+  for (let j = 0; j < l; j++)
+    A[i][j] = (A[i][j - 1] ?? 0) + +(i == str[j].charCodeAt() - 97) 
+for (let i = 2; i < question + 2; i++) {
+  const [a, l, r] = input[i].split(' ')
+  const j = a.charCodeAt() - 97
+  O.push(A[j][r] - (A[j][l - 1] ?? 0))
 }
 
-for (let i = 2; i < 2 + b; i++) {
-  const [char, l, r] = input[i].split(" ");
-  const count = sol(a, char, parseInt(l), parseInt(r));
-  console.log(count);
-}
+console.log(O.join('\n'))
